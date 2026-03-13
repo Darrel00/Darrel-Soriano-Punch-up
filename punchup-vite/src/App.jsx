@@ -1,13 +1,23 @@
 import SaveButton from "./components/save-button.jsx";
 import Navbutton from "./components/nav-button.jsx";
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import './App.css';
 
 function Challenge() {
     const canvasRef = useRef(null);
     const toolbarRef = useRef(null);
     const isPaintingRef = useRef(false);
-    const lineWidthRef = useRef(5);
+    const lineWidthRef = useRef();
+    const [showWidthMenu, setShowWidthMenu] = useState(false);
+    const [selectedWidth, setSelectedWidth] = useState(5);
+
+    const strokeWidths = [
+        { label: 'Thin', value: 2},
+        { label: 'Medium', value: 5 },
+        { label: 'Thick', value: 10 },
+        { label: 'Extra Thick', value: 20 },
+    ]
+    
 
     useEffect(() => {
         const canvas = canvasRef.current;
@@ -32,20 +42,14 @@ function Challenge() {
             if(e.target.id === 'stroke') {
                 ctx.strokeStyle = e.target.value;
             }
-
-            if(e.target.id === 'lineWidth') {
-                lineWidthRef.current = e.target.value;
-            }
         });
 
         const draw = (e) => {
             if(!isPaintingRef.current){
                 return;
             }
-
             ctx.lineWidth = lineWidthRef.current;
             ctx.lineCap = 'round';
-
             ctx.lineTo(e.clientX - canvasOffsetX, e.clientY);
             ctx.stroke();
         }
@@ -71,6 +75,12 @@ function Challenge() {
         };
     }, []);
 
+    const handleWidthSelect = (value) => {
+        lineWidthRef.current = value;
+        setSelectedWidth(value);
+        setShowWidthMenu(false);
+    }
+
     return (
             <div className="background">
                 <section className="website-top">
@@ -88,8 +98,51 @@ function Challenge() {
                   <div ref={toolbarRef}>
                     <label htmlFor="stroke">Stroke</label>
                     <input id="stroke" name="stroke" type="color"/>
-                    <label htmlFor="lineWidth">Line Width</label>
-                    <input id="linewidth" name='lineWidth' type="number" value="5"/>
+                    <div className="stroke-width-section">
+                        <button id="lineWidth" name='lineWidth' onClick={() => setShowWidthMenu(prev => !prev)}>Change Width</button>
+
+
+                        {showWidthMenu && (
+                            <div style={{
+                                position: 'absolute',
+                                top: '100%',
+                                left: 0,
+                                background: '#fff'
+                            }}>
+
+                            {strokeWidths.map(({ label, value }) => {
+                                <div
+                                    key={value}
+                                    onClick={() => handleWidthSelect(value)}
+                                    style={{
+                                        padding: '8px 12px',
+                                        cursor: 'pointer',
+                                        fontWeight: selectedWidth === value ? 'bold' : 'normal',
+                                            background: selectedWidth === value ? '#f0f0f0' : 'transparent',
+                                            display: 'flex'
+                                    }}
+                                    >
+                                <div style={{
+                                    width: '40px',
+                                    height: `${value}px`,
+                                    background: '#333',
+                                    borderRadius: '999px'
+                                }} />
+                                {label} ({value}px)
+                                </div>
+                            })}
+                            </div>
+                        )}
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    </div>
                     <button id="clear">Clear</button>
                   </div>
                   <div className="drawing-board">

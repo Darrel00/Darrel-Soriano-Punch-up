@@ -1,3 +1,16 @@
-.board {
+canvas {
+    background-color: gray;
+    max-width: 900px;
+}
+
+.drawing-board {
     border-color: black;
+}
+
+.background {
+    background-color: brown;
+}
+
+.stroke-width-section {
+    
 }
