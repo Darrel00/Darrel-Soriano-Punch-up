@@ -1,10 +1,12 @@
 import './save-button.css';
 
 function SaveButton() {
-    return (
-        <div>
 
-        </div>
+
+    return (
+        <button onClick={handleSave}>
+            Save as Image
+        </button>
     )
 }
 

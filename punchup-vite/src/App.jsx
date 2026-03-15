@@ -1,4 +1,3 @@
-import SaveButton from "./components/save-button.jsx";
 import Navbutton from "./components/nav-button.jsx";
 import { useEffect, useRef, useState } from 'react';
 import './App.css';
@@ -18,6 +17,17 @@ function Challenge() {
         { label: 'Extra Thick', value: 20 },
     ]
     
+    const handleSave = () => {
+        const canvas = canvasRef.current;
+        if (!canvas) return;
+
+        const image = canvas.toDataURL("image/");
+        const link = document.createElement("a");
+        link.href = image;
+        link.download = "my-drawing.png";
+        link.click();
+    };
+
 
     useEffect(() => {
         const canvas = canvasRef.current;
@@ -97,6 +107,9 @@ function Challenge() {
                 <section className="drawing-section">
                   <div ref={toolbarRef}>
                     <label htmlFor="stroke">Stroke</label>
+                    <button onClick={handleSave}>
+                        Save as Image
+                    </button>
                     <input id="stroke" name="stroke" type="color"/>
                     <div className="stroke-width-section">
                         <button id="lineWidth" name='lineWidth' onClick={() => setShowWidthMenu(prev => !prev)}>Change Width</button>
@@ -110,7 +123,7 @@ function Challenge() {
                                 background: '#fff'
                             }}>
 
-                            {strokeWidths.map(({ label, value }) => {
+                            {strokeWidths.map(({ label, value }) => (
                                 <div
                                     key={value}
                                     onClick={() => handleWidthSelect(value)}
@@ -130,18 +143,9 @@ function Challenge() {
                                 }} />
                                 {label} ({value}px)
                                 </div>
-                            })}
+                            ))}
                             </div>
                         )}
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
                     </div>
                     <button id="clear">Clear</button>
                   </div>
