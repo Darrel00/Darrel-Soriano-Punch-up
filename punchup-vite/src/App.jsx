@@ -1,12 +1,12 @@
-import Navbutton from "./components/nav-button.jsx";
 import { useEffect, useRef, useState } from 'react';
+import { useNavigate } from "react-router-dom";
 import './App.css';
 
 function Challenge() {
     const canvasRef = useRef(null);
     const toolbarRef = useRef(null);
     const isPaintingRef = useRef(false);
-    const lineWidthRef = useRef();
+    const lineWidthRef = useRef(5);
     const [showWidthMenu, setShowWidthMenu] = useState(false);
     const [selectedWidth, setSelectedWidth] = useState(5);
 
@@ -36,11 +36,9 @@ function Challenge() {
         if (!canvas || !toolbar) return;
         
         const ctx = canvas.getContext('2d');
-        const canvasOffsetX = canvas.offsetLeft;
-        const canvasOffsetY = canvas.offsetTop;
 
-        canvas.width = window.innerWidth - canvasOffsetX;
-        canvas.height = window.innerHeight - canvasOffsetY;
+        canvas.width = canvas.offsetWidth;
+        canvas.height = canvas.offsetHeight;
 
         toolbar.addEventListener('click', e => {
             if (e.target.id === 'clear') {
@@ -55,12 +53,11 @@ function Challenge() {
         });
 
         const draw = (e) => {
-            if(!isPaintingRef.current){
-                return;
-            }
+            if(!isPaintingRef.current) return;
+            const rect = canvas.getBoundingClientRect();
             ctx.lineWidth = lineWidthRef.current;
             ctx.lineCap = 'round';
-            ctx.lineTo(e.clientX - canvasOffsetX, e.clientY);
+            ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
             ctx.stroke();
         }
 
@@ -96,13 +93,14 @@ function Challenge() {
                 <section className="website-top">
                     <div>
                         <h1>Experience being a Graphic Designer!</h1>
-                        <h3>See what it’s like to be a designer by putting your ideas into a drawing! Generate a prompt, and use the drawing tools to make a design before the time runs out. When you’re done, save your image on the bottom right.
+                        <h3 className='description'>See what it’s like to be a designer by putting your ideas into a drawing! Generate a prompt, and use the drawing tools to make a design before the time runs out. When you’re done, save your image on the bottom right.
 
                         Have fun and get creative!</h3>
                     </div>
                 </section>
                 <div className="header">
-                  <Navbutton />
+                  <button onClick={() => navigate('')}>Free Draw</button>
+                  <button onClick={() => navigate('')}>Challenge</button>
                 </div>
                 <section className="drawing-section">
                   <div ref={toolbarRef}>
@@ -114,33 +112,16 @@ function Challenge() {
                     <div className="stroke-width-section">
                         <button id="lineWidth" name='lineWidth' onClick={() => setShowWidthMenu(prev => !prev)}>Change Width</button>
 
-
                         {showWidthMenu && (
-                            <div style={{
-                                position: 'absolute',
-                                top: '100%',
-                                left: 0,
-                                background: '#fff'
-                            }}>
+                            <div className="menu">
 
                             {strokeWidths.map(({ label, value }) => (
                                 <div
                                     key={value}
                                     onClick={() => handleWidthSelect(value)}
-                                    style={{
-                                        padding: '8px 12px',
-                                        cursor: 'pointer',
-                                        fontWeight: selectedWidth === value ? 'bold' : 'normal',
-                                            background: selectedWidth === value ? '#f0f0f0' : 'transparent',
-                                            display: 'flex'
-                                    }}
+                                    className="map"
                                     >
-                                <div style={{
-                                    width: '40px',
-                                    height: `${value}px`,
-                                    background: '#333',
-                                    borderRadius: '999px'
-                                }} />
+                                <div className="stroke"/>
                                 {label} ({value}px)
                                 </div>
                             ))}

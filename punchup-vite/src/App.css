@@ -1,14 +1,44 @@
 canvas {
-    background-color: gray;
-    max-width: 900px;
+    background-color: white;
+    width: 1500px;
+    height: 700px;
+    border-radius: 30px;
+}
+
+.website-top {
+    align-items: center;
+}
+
+.description {
+    width: 600px;
+    margin-bottom: 100px;
 }
 
 .drawing-board {
     border-color: black;
+    margin-left: 200px;
 }
 
 .background {
     background-color: brown;
+    padding: 100px;
+}
+
+.menu {
+    position: 'absolute';
+    top: '100%';
+    left: 0;
+    background: '#fff';
+    z-index: 10;
+}
+
+.map {
+    padding: '8px 12px';
+    cursor: 'pointer';
+}
+
+.stroke {
+    width: '40px';
 }
 
 .stroke-width-section {
