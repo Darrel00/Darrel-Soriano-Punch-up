@@ -3,8 +3,9 @@ import { useNavigate } from "react-router-dom";
 import Download from "./assets/Download.svg";
 import Eraser from "./assets/Eraser.svg";
 import Pen from "./assets/Pen.svg";
-import Redo from "./assets/Redo.svg"
-import Undo from "./assets/Undo.svg"
+import Redo from "./assets/Redo.svg";
+import Undo from "./assets/Undo.svg";
+import Stroke from "./assets/Stroke.svg";
 import './App.css';
 
 function Challenge() {
@@ -12,6 +13,8 @@ function Challenge() {
     const toolbarRef = useRef(null);
     const isPaintingRef = useRef(false);
     const lineWidthRef = useRef(5);
+    const DrawModeRef = useRef(false);
+    const EraseModeRef = useRef(false);
     const [showWidthMenu, setShowWidthMenu] = useState(false);
     const [selectedWidth, setSelectedWidth] = useState(5);
 
@@ -26,17 +29,15 @@ function Challenge() {
         const canvas = canvasRef.current;
         if (!canvas) return;
 
+        const nameInput = document.getElementById('given-name');
+        const newTitle = nameInput?.value.trim();
+
         const image = canvas.toDataURL("image/");
         const link = document.createElement("a");
         link.href = image;
-        link.download = "my-drawing.png";
+        link.download = newTitle ? `${newTitle}.png` : "my-drawing.png";
         link.click();
     };
-
-    const drawingname = () => {
-
-    }
-
 
     useEffect(() => {
         const canvas = canvasRef.current;
@@ -49,13 +50,74 @@ function Challenge() {
         canvas.width = canvas.offsetWidth;
         canvas.height = canvas.offsetHeight;
 
-        // Draw
-        toolbar.addEventListener('', e => {
-            
-        })
+        const draw = (e) => {
+            if(!isPaintingRef.current || !DrawModeRef.current) return;
+            const rect = canvas.getBoundingClientRect();
+            ctx.lineWidth = lineWidthRef.current;
+            ctx.lineCap = 'round';
+            ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
+            ctx.stroke();
+        };
 
-        // Clear all
+        // Draw
         toolbar.addEventListener('click', e => {
+            if (e.target.id === 'draw') {
+                DrawModeRef.current = true;
+                EraseModeRef.current = false;
+                canvas.style.cursor = 'crosshair';
+                
+                if (!canvas.dataset.listenersAttached) {
+                    canvas.addEventListener('mousedown', () => {
+                        if (!DrawModeRef.current) return;
+                        isPaintingRef.current = true;
+                    });
+
+                    canvas.addEventListener('mouseup', () => {
+                        isPaintingRef.current = false;
+                        ctx.stroke();
+                        ctx.beginPath();
+                    });
+
+                    canvas.addEventListener('mousemove', draw);
+
+                    canvas.dataset.listenersAttached = 'true';
+                }
+            }
+
+            if (e.target.id === 'erase') {
+                DrawModeRef.current = false;
+                EraseModeRef.current = true;
+                canvas.style.cursor = 'default';
+
+                if (!canvas.dataset.listenersAttached) {
+                    canvas.addEventListener('mousedown', () => {
+                        if (!DrawModeRef.current) return;
+                        isPaintingRef.current = true;
+                    });
+
+                    canvas.addEventListener('mouseup', () => {
+                        isPaintingRef.current = false;
+                        ctx.stroke();
+                        ctx.beginPath();
+                    });
+
+                    canvas.addEventListener('mousemove', (e) => {
+                        if (!isPaintingRef.current || !DrawModeRef.current) return;
+                        const rect = canvas.getBoundingClientRect();
+                        ctx.lineWidth = lineWidthRef.current;
+                        ctx.lineCap = 'round';
+                        ctx.strokeStyle = DrawModeRef.current === 'erase'
+                            ? '#ffffff'
+                            : colorRef.current;
+                        ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
+                        ctx.stroke();
+                    });
+
+                    canvas.dataset.listenersAttached = 'true';
+                }
+            }
+
+            // Clear all
             if (e.target.id === 'clear') {
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
             }
@@ -68,36 +130,9 @@ function Challenge() {
             }
         });
 
-        const draw = (e) => {
-            if(!isPaintingRef.current) return;
-            const rect = canvas.getBoundingClientRect();
-            ctx.lineWidth = lineWidthRef.current;
-            ctx.lineCap = 'round';
-            ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
-            ctx.stroke();
-        }
-
-        
-
-        canvas.addEventListener('mousedown', (e) => {
-            isPaintingRef.current = true;
-        });
-
-        canvas.addEventListener('mouseup', (e) => {
-            isPaintingRef.current = false;
-            ctx.stroke();
-            ctx.beginPath();
-        });
-
-        canvas.addEventListener('mousemove', draw);
-
         return () => {
-            canvas.removeEventListener('mousedown', () => {});
-            canvas.removeEventListener('mouseup', () => {});
-            canvas.removeEventListener('mousemove', draw);
             toolbar.removeEventListener('click', () => {});
             toolbar.removeEventListener('change', () => {});
-            toolbar.removeEventListener('eraser', () => {});
         };
     }, []);
 
@@ -125,10 +160,9 @@ function Challenge() {
                   <div ref={toolbarRef} className='toolbar'>
                     <img src={Pen} id='draw'/>
                     <img src={Eraser} id='erase'/>
-                    <label htmlFor="stroke">Stroke</label>
-                    <input id="stroke" name="stroke" type="color"/>
+                    <input className='stroke-color' id="stroke" name="stroke" type="color"/>
                     <div className="stroke-width-section">
-                        <button id="lineWidth" name='lineWidth' onClick={() => setShowWidthMenu(prev => !prev)}>Change Width</button>
+                        <img src={Stroke} id="lineWidth" name='lineWidth' onClick={() => setShowWidthMenu(prev => !prev)} />
 
                         {showWidthMenu && (
                             <div className="menu">
@@ -151,7 +185,9 @@ function Challenge() {
                   <div className="drawing-board">
                     <canvas ref={canvasRef} id="drawing-board"></canvas>
                   <div className='bottom-section'>
-                    <input className='drawing-name' placeholder='Give it a name....'/>
+                    <input className='drawing-name' id='given-name' placeholder='Give it a name....'/>
+                    <img src={Undo} className='undo'/>
+                    <img src={Redo} className='redo'/>
                     <img src={Download} onClick={handleSave} className='download'/>
                   </div>
                   </div>
