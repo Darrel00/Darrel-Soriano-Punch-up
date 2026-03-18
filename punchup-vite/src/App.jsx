@@ -1,5 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from "react-router-dom";
+import Download from "./assets/Download.svg";
+import Eraser from "./assets/Eraser.svg";
+import Pen from "./assets/Pen.svg";
+import Redo from "./assets/Redo.svg"
+import Undo from "./assets/Undo.svg"
 import './App.css';
 
 function Challenge() {
@@ -28,6 +33,10 @@ function Challenge() {
         link.click();
     };
 
+    const drawingname = () => {
+
+    }
+
 
     useEffect(() => {
         const canvas = canvasRef.current;
@@ -40,12 +49,19 @@ function Challenge() {
         canvas.width = canvas.offsetWidth;
         canvas.height = canvas.offsetHeight;
 
+        // Draw
+        toolbar.addEventListener('', e => {
+            
+        })
+
+        // Clear all
         toolbar.addEventListener('click', e => {
             if (e.target.id === 'clear') {
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
             }
         });
 
+        // Change Colour
         toolbar.addEventListener('change', e => {
             if(e.target.id === 'stroke') {
                 ctx.strokeStyle = e.target.value;
@@ -61,11 +77,13 @@ function Challenge() {
             ctx.stroke();
         }
 
+        
+
         canvas.addEventListener('mousedown', (e) => {
             isPaintingRef.current = true;
         });
 
-        canvas.addEventListener('mouseup', e => {
+        canvas.addEventListener('mouseup', (e) => {
             isPaintingRef.current = false;
             ctx.stroke();
             ctx.beginPath();
@@ -79,6 +97,7 @@ function Challenge() {
             canvas.removeEventListener('mousemove', draw);
             toolbar.removeEventListener('click', () => {});
             toolbar.removeEventListener('change', () => {});
+            toolbar.removeEventListener('eraser', () => {});
         };
     }, []);
 
@@ -92,22 +111,21 @@ function Challenge() {
             <div className="background">
                 <section className="website-top">
                     <div>
-                        <h1>Experience being a Graphic Designer!</h1>
-                        <h3 className='description'>See what it’s like to be a designer by putting your ideas into a drawing! Generate a prompt, and use the drawing tools to make a design before the time runs out. When you’re done, save your image on the bottom right.
-
-                        Have fun and get creative!</h3>
+                        <h1 className='title'>Experience being a Graphic Designer!</h1>
+                        <h3 className='description'>See what it’s like to be a designer by putting your ideas into a drawing!
+                            Generate a prompt, and use the drawing tools to make a design before the time runs out. When you’re done, save your image on the bottom right.</h3>
                     </div>
                 </section>
                 <div className="header">
+                  <button className='generate-prompt'>Generate a Prompt</button>
                   <button onClick={() => navigate('')}>Free Draw</button>
                   <button onClick={() => navigate('')}>Challenge</button>
                 </div>
                 <section className="drawing-section">
-                  <div ref={toolbarRef}>
+                  <div ref={toolbarRef} className='toolbar'>
+                    <img src={Pen} id='draw'/>
+                    <img src={Eraser} id='erase'/>
                     <label htmlFor="stroke">Stroke</label>
-                    <button onClick={handleSave}>
-                        Save as Image
-                    </button>
                     <input id="stroke" name="stroke" type="color"/>
                     <div className="stroke-width-section">
                         <button id="lineWidth" name='lineWidth' onClick={() => setShowWidthMenu(prev => !prev)}>Change Width</button>
@@ -132,6 +150,10 @@ function Challenge() {
                   </div>
                   <div className="drawing-board">
                     <canvas ref={canvasRef} id="drawing-board"></canvas>
+                  <div className='bottom-section'>
+                    <input className='drawing-name' placeholder='Give it a name....'/>
+                    <img src={Download} onClick={handleSave} className='download'/>
+                  </div>
                   </div>
                 </section>
             </div>

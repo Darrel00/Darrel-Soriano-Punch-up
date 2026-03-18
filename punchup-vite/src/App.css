@@ -1,3 +1,23 @@
+.title {
+    width: 1260px;
+    height: 168px;
+    color: #001B71;
+    font-family: Sansation;
+    font-size: 32px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+}
+
+.description {
+    width: 684px;
+    height: 164px;
+    color: #001B71;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: normal;
+}
+
 canvas {
     background-color: white;
     width: 1500px;
@@ -7,11 +27,7 @@ canvas {
 
 .website-top {
     align-items: center;
-}
-
-.description {
-    width: 600px;
-    margin-bottom: 100px;
+    padding: 70px;
 }
 
 .drawing-board {
@@ -20,8 +36,28 @@ canvas {
 }
 
 .background {
-    background-color: brown;
-    padding: 100px;
+    background-color: white;
+}
+
+.header {
+    width: 2265px;
+    height: 111px;
+    background: black;
+}
+
+.drawing-section {
+    background: #000E3A;
+    display: flex;
+    padding: 130px;
+}
+
+.toolbar {
+    width: 75.636px;
+    height: 284px;
+    border-radius: 40px;
+    background: #69AAE4;
+    flex-direction: column;
+    align-content: center;
 }
 
 .menu {
@@ -43,4 +79,12 @@ canvas {
 
 .stroke-width-section {
     
+}
+
+.bottom-section {
+
+}
+
+.drawing-name {
+
 }
