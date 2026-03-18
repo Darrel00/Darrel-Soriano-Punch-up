@@ -45,6 +45,20 @@ canvas {
     background: black;
 }
 
+.generate-prompt {
+    border-radius: 16px;
+    background: #FFB548;
+    width: 156px;
+    height: 43px;
+    color: #fff;
+    font-family: Sansation;
+}
+
+.prompt {
+    color: white;
+    font-family: Sansation;
+}
+
 .drawing-section {
     background: #000E3A;
     display: flex;
@@ -92,9 +106,11 @@ canvas {
 }
 
 .bottom-section {
-
+    
 }
 
 .drawing-name {
-
+    width: 492px;
+    height: 40px;
+    border-radius: 18px;
 }

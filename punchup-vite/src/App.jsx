@@ -17,6 +17,7 @@ function Challenge() {
     const EraseModeRef = useRef(false);
     const [showWidthMenu, setShowWidthMenu] = useState(false);
     const [selectedWidth, setSelectedWidth] = useState(5);
+    const [prompt, setPrompt] = useState('');
 
     const strokeWidths = [
         { label: 'Thin', value: 2},
@@ -38,6 +39,17 @@ function Challenge() {
         link.download = newTitle ? `${newTitle}.png` : "my-drawing.png";
         link.click();
     };
+
+    const getPrompt = async () => {
+        try {
+            const response = await fetch("https://retoolapi.dev/FfoNKG/prompts");
+            const data = await response.json();
+            const random = data[Math.floor(Math.random() * data.length)];
+            setPrompt(random.DesignPrompt);
+        } catch (error) {
+            console.error("Failed to fetch prompt:", error);
+        }
+    }
 
     useEffect(() => {
         const canvas = canvasRef.current;
@@ -117,10 +129,10 @@ function Challenge() {
                 }
             }
 
-            // Clear all
-            if (e.target.id === 'clear') {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-            }
+        // Clear all
+        if (e.target.id === 'clear') {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
         });
 
         // Change Colour
@@ -152,7 +164,8 @@ function Challenge() {
                     </div>
                 </section>
                 <div className="header">
-                  <button className='generate-prompt'>Generate a Prompt</button>
+                  <button id='generate' className='generate-prompt' onClick={getPrompt}>Generate a Prompt</button>
+                  <div id='prompt' className='prompt'>{prompt}</div>
                   <button onClick={() => navigate('')}>Free Draw</button>
                   <button onClick={() => navigate('')}>Challenge</button>
                 </div>
