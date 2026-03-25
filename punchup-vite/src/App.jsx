@@ -19,13 +19,22 @@ function Challenge() {
     const [selectedWidth, setSelectedWidth] = useState(5);
     const [prompt, setPrompt] = useState('');
 
+
+    // Stroke Width //
     const strokeWidths = [
         { label: 'Thin', value: 2},
         { label: 'Medium', value: 5 },
         { label: 'Thick', value: 10 },
         { label: 'Extra Thick', value: 20 },
     ]
+
+    const handleWidthSelect = (value) => {
+        lineWidthRef.current = value;
+        setSelectedWidth(value);
+        setShowWidthMenu(false);
+    }
     
+    // Save Function //
     const handleSave = () => {
         const canvas = canvasRef.current;
         if (!canvas) return;
@@ -40,6 +49,7 @@ function Challenge() {
         link.click();
     };
 
+    // Prompt Function //
     const getPrompt = async () => {
             const response = await fetch("https://retoolapi.dev/FfoNKG/prompts");
             const data = await response.json();
@@ -59,6 +69,7 @@ function Challenge() {
         canvas.width = canvas.offsetWidth;
         canvas.height = canvas.offsetHeight;
 
+        // Draw Function
         const draw = (e) => {
             if(!isPaintingRef.current || !DrawModeRef.current) return;
             const rect = canvas.getBoundingClientRect();
@@ -68,7 +79,6 @@ function Challenge() {
             ctx.stroke();
         };
 
-        // Draw
         toolbar.addEventListener('click', e => {
             if (e.target.id === 'draw') {
                 DrawModeRef.current = true;
@@ -93,6 +103,7 @@ function Challenge() {
                 }
             }
 
+            // Erase Function (Incomplete)
             if (e.target.id === 'erase') {
                 DrawModeRef.current = false;
                 EraseModeRef.current = true;
@@ -144,12 +155,6 @@ function Challenge() {
             toolbar.removeEventListener('change', () => {});
         };
     }, []);
-
-    const handleWidthSelect = (value) => {
-        lineWidthRef.current = value;
-        setSelectedWidth(value);
-        setShowWidthMenu(false);
-    }
 
     return (
             <div className="background">
