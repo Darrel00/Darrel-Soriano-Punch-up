@@ -41,14 +41,11 @@ function Challenge() {
     };
 
     const getPrompt = async () => {
-        try {
             const response = await fetch("https://retoolapi.dev/FfoNKG/prompts");
             const data = await response.json();
             const random = data[Math.floor(Math.random() * data.length)];
             setPrompt(random.DesignPrompt);
-        } catch (error) {
             console.error("Failed to fetch prompt:", error);
-        }
     }
 
     useEffect(() => {
