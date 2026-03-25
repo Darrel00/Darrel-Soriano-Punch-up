@@ -1,3 +1,9 @@
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
 .title {
     width: 1260px;
     height: 168px;
@@ -10,10 +16,10 @@
 }
 
 .description {
-    width: 684px;
+    width: 884px;
     height: 164px;
     color: #001B71;
-    font-size: 16px;
+    font-size: 25px;
     font-weight: 700;
     line-height: normal;
 }
@@ -40,23 +46,32 @@ canvas {
 }
 
 .header {
-    width: 2265px;
+    width: 2281px;
     height: 111px;
+    gap: 20px;
     background: black;
+    display: flex;
 }
 
 .generate-prompt {
     border-radius: 16px;
     background: #FFB548;
-    width: 156px;
-    height: 43px;
+    width: 256px;
+    height: 60px;
     color: #fff;
+    font-size: 25px;
+    font-weight: bold;
     font-family: Sansation;
 }
 
 .prompt {
-    color: white;
+    color: #000E3A;
+    font-size: 25px;
     font-family: Sansation;
+    width: 800px;
+    height: 60px;
+    border-radius: 16px;
+    background-color: #FFF;
 }
 
 .drawing-section {
@@ -65,13 +80,21 @@ canvas {
     padding: 130px;
 }
 
+.pencil {
+    height: 60px;
+}
+
+.eraser {
+    height: 60px;
+}
+
 .toolbar {
-    width: 75.636px;
-    height: 284px;
+    width: 85.636px;
+    height: 584px;
     border-radius: 40px;
     background: #69AAE4;
+    display: flex;
     flex-direction: column;
-    align-content: center;
 }
 
 .stroke-color {
@@ -79,15 +102,23 @@ canvas {
     border-radius: 100px;
     border-color: #fff;
     background-color: #fff;
-    width: 38px;
-    height: 38px;
+    width: 60px;
+    height: 60px;
+    align-self: center;
+}
+
+.stroke-width {
+    height: 60px;
+    width: 60px;
+    margin-left: 13px;
 }
 
 .menu {
     position: 'absolute';
     top: '100%';
     left: 0;
-    background: '#fff';
+    font-size: 15px;
+    background: white;
     z-index: 10;
 }
 
@@ -104,4 +135,39 @@ canvas {
     width: 492px;
     height: 40px;
     border-radius: 18px;
+}
+
+.free-draw {
+    border-radius: 16px;
+    border: 2px solid #000;
+    background: #FFF;
+    width: 170px;
+    height: 60px;
+    color: #001B71;
+    text-align: center;
+    font-family: Sansation;
+    font-size: 25px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+}
+
+.challenge {
+    border-radius: 16px;
+    border: 2px solid #000;
+    background: #FFF;
+    width: 170px;
+    height: 60px;
+    color: #001B71;
+    text-align: center;
+    font-family: Sansation;
+    font-size: 25px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+}
+
+.bottom-section {
+    display: flex;
+
 }

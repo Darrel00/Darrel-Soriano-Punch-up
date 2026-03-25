@@ -168,16 +168,20 @@ function Challenge() {
                 <div className="header">
                   <button id='generate' className='generate-prompt' onClick={getPrompt}>Generate a Prompt</button>
                   <div id='prompt' className='prompt'>{prompt}</div>
-                  <button onClick={() => navigate('')}>Free Draw</button>
-                  <button onClick={() => navigate('')}>Challenge</button>
+                  <button onClick={() => navigate('')} className='free-draw'>Free Draw</button>
+                  <button onClick={() => navigate('')} className='challenge'>Challenge</button>
+                  <div className='timer-section'>
+                    <button className='timer-button'></button>
+                    <div className='timer'></div>
+                  </div>
                 </div>
                 <section className="drawing-section">
                   <div ref={toolbarRef} className='toolbar'>
-                    <img src={Pen} id='draw'/>
-                    <img src={Eraser} id='erase'/>
+                    <img src={Pen} id='draw' className='pencil'/>
+                    <img src={Eraser} id='erase' className='eraser'/>
                     <input className='stroke-color' id="stroke" name="stroke" type="color"/>
                     <div className="stroke-width-section">
-                        <img src={Stroke} id="lineWidth" name='lineWidth' onClick={() => setShowWidthMenu(prev => !prev)} />
+                        <img src={Stroke} id="lineWidth" name='lineWidth' className='stroke-width' onClick={() => setShowWidthMenu(prev => !prev)} />
 
                         {showWidthMenu && (
                             <div className="menu">
