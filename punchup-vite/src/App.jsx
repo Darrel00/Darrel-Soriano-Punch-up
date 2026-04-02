@@ -68,13 +68,16 @@ function Challenge() {
 
         canvas.width = canvas.offsetWidth;
         canvas.height = canvas.offsetHeight;
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
 
         // Draw Function
         const draw = (e) => {
-            if(!isPaintingRef.current || !DrawModeRef.current) return;
+            if(!isPaintingRef.current || (!DrawModeRef.current && !EraseModeRef)) return;
             const rect = canvas.getBoundingClientRect();
             ctx.lineWidth = lineWidthRef.current;
             ctx.lineCap = 'round';
+            ctx.strokeStyle = DrawModeRef.current ? '#000000' : '#ffffff';
             ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
             ctx.stroke();
         };
@@ -87,7 +90,7 @@ function Challenge() {
                 
                 if (!canvas.dataset.listenersAttached) {
                     canvas.addEventListener('mousedown', () => {
-                        if (!DrawModeRef.current) return;
+                        if (!DrawModeRef.current && !EraseModeRef.current) return;
                         isPaintingRef.current = true;
                     });
 
@@ -107,39 +110,13 @@ function Challenge() {
             if (e.target.id === 'erase') {
                 DrawModeRef.current = false;
                 EraseModeRef.current = true;
-                canvas.style.cursor = 'default';
-
-                if (!canvas.dataset.listenersAttached) {
-                    canvas.addEventListener('mousedown', () => {
-                        if (!DrawModeRef.current) return;
-                        isPaintingRef.current = true;
-                    });
-
-                    canvas.addEventListener('mouseup', () => {
-                        isPaintingRef.current = false;
-                        ctx.stroke();
-                        ctx.beginPath();
-                    });
-
-                    canvas.addEventListener('mousemove', (e) => {
-                        if (!isPaintingRef.current || !DrawModeRef.current) return;
-                        const rect = canvas.getBoundingClientRect();
-                        ctx.lineWidth = lineWidthRef.current;
-                        ctx.lineCap = 'round';
-                        ctx.strokeStyle = DrawModeRef.current === 'erase'
-                            ? '#ffffff'
-                            : colorRef.current;
-                        ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
-                        ctx.stroke();
-                    });
-
-                    canvas.dataset.listenersAttached = 'true';
-                }
+                canvas.style.cursor = 'crosshair';
             }
 
         // Clear all
         if (e.target.id === 'clear') {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
         }
         });
 
@@ -205,9 +182,11 @@ function Challenge() {
                     <canvas ref={canvasRef} id="drawing-board"></canvas>
                   <div className='bottom-section'>
                     <input className='drawing-name' id='given-name' placeholder='Give it a name....'/>
+                    <div className='bottom-section-buttons'>
                     <img src={Undo} className='undo'/>
                     <img src={Redo} className='redo'/>
                     <img src={Download} onClick={handleSave} className='download'/>
+                    </div>
                   </div>
                   </div>
                 </section>

@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Sansation:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap');
+
 *, *::before, *::after {
     box-sizing: border-box;
     margin: 0;
@@ -19,13 +21,14 @@
     width: 884px;
     height: 164px;
     color: #001B71;
+    font-family: Sansation;
     font-size: 25px;
-    font-weight: 700;
+    font-weight: 400;
     line-height: normal;
 }
 
 canvas {
-    background-color: white;
+    background-color: red;
     width: 1500px;
     height: 700px;
     border-radius: 30px;
@@ -48,6 +51,8 @@ canvas {
 .header {
     height: 111px;
     gap: 20px;
+    align-items: center;
+    justify-content: center;
     background: black;
     display: flex;
 }
@@ -61,12 +66,21 @@ canvas {
     font-size: 25px;
     font-weight: bold;
     font-family: Sansation;
+    &:hover {
+        cursor: pointer;
+        background-color: #69AAE4;
+    }
+    &:active {
+        cursor: pointer;
+        transform: scale(1.1);
+    }
 }
 
 .prompt {
     color: #000E3A;
     font-size: 25px;
     font-family: Sansation;
+    padding: 15px 20px;
     width: 800px;
     height: 60px;
     border-radius: 16px;
@@ -76,10 +90,11 @@ canvas {
 .drawing-section {
     background: #000E3A;
     display: flex;
+    justify-content: center;
     padding: 130px;
 }
 
-.pencil, .eraser, .redo, .undo, .stroke-width, .stroke-color, .trash {
+.pencil, .eraser, .redo, .undo, .stroke-width, .stroke-color, .trash, .download {
     width: 60px;
     height: 60px;
     &:hover {
@@ -126,8 +141,11 @@ canvas {
 }
 
 .drawing-name {
-    width: 492px;
-    height: 40px;
+    padding: 15px 20px;
+    width: 800px;
+    height: 60px;
+    font-size: 25px;
+    font-family: Sansation;
     border-radius: 18px;
 }
 
@@ -148,5 +166,13 @@ canvas {
 
 .bottom-section {
     display: flex;
+    align-items: center;
+    gap: 20px;
+    justify-content: space-between;
+    margin-top: 20px;
+}
 
+.bottom-section-buttons {
+    display: flex;
+    gap: 20px;
 }
