@@ -6,6 +6,7 @@ import Pen from "./assets/Pen.svg";
 import Redo from "./assets/Redo.svg";
 import Undo from "./assets/Undo.svg";
 import Stroke from "./assets/Stroke.svg";
+import Trash from "./assets/Trash-Can.svg";
 import './App.css';
 
 function Challenge() {
@@ -41,7 +42,6 @@ function Challenge() {
 
         const nameInput = document.getElementById('given-name');
         const newTitle = nameInput?.value.trim();
-
         const image = canvas.toDataURL("image/");
         const link = document.createElement("a");
         link.href = image;
@@ -199,7 +199,7 @@ function Challenge() {
                             </div>
                         )}
                     </div>
-                    <button id="clear">Clear</button>
+                    <img src={Trash} id="clear" className='trash' />
                   </div>
                   <div className="drawing-board">
                     <canvas ref={canvasRef} id="drawing-board"></canvas>

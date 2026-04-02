@@ -46,7 +46,6 @@ canvas {
 }
 
 .header {
-    width: 2281px;
     height: 111px;
     gap: 20px;
     background: black;
@@ -80,37 +79,28 @@ canvas {
     padding: 130px;
 }
 
-.pencil {
+.pencil, .eraser, .redo, .undo, .stroke-width, .stroke-color, .trash {
+    width: 60px;
     height: 60px;
-}
-
-.eraser {
-    height: 60px;
+    &:hover {
+        cursor: pointer;
+        transform: scale(1.1);
+    }
+    &:active {
+        cursor: pointer;
+        transform: scale(1.1);
+    }
 }
 
 .toolbar {
     width: 85.636px;
-    height: 584px;
+    max-height: 584px;
     border-radius: 40px;
     background: #69AAE4;
     display: flex;
     flex-direction: column;
-}
-
-.stroke-color {
-    margin-bottom: 20px;
-    border-radius: 100px;
-    border-color: #fff;
-    background-color: #fff;
-    width: 60px;
-    height: 60px;
-    align-self: center;
-}
-
-.stroke-width {
-    height: 60px;
-    width: 60px;
-    margin-left: 13px;
+    padding: 25px 15px 0 13px;
+    gap: 20px;
 }
 
 .menu {
@@ -125,6 +115,10 @@ canvas {
 .map {
     padding: '8px 12px';
     cursor: 'pointer';
+    font-family: Sansation;
+    &:hover {
+        background-color: #69AAE4;
+    }
 }
 
 .stroke {
@@ -137,22 +131,7 @@ canvas {
     border-radius: 18px;
 }
 
-.free-draw {
-    border-radius: 16px;
-    border: 2px solid #000;
-    background: #FFF;
-    width: 170px;
-    height: 60px;
-    color: #001B71;
-    text-align: center;
-    font-family: Sansation;
-    font-size: 25px;
-    font-style: normal;
-    font-weight: 700;
-    line-height: normal;
-}
-
-.challenge {
+.free-draw, .challenge {
     border-radius: 16px;
     border: 2px solid #000;
     background: #FFF;
