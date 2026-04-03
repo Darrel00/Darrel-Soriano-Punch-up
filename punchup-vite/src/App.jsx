@@ -58,12 +58,15 @@ function Challenge() {
             console.error("Failed to fetch prompt:", error);
     }
 
+    // const timer = () => {
+        
+    // }
+
     useEffect(() => {
         const canvas = canvasRef.current;
         const toolbar = toolbarRef.current;
-        
+
         if (!canvas || !toolbar) return;
-        
         const ctx = canvas.getContext('2d');
 
         canvas.width = canvas.offsetWidth;
@@ -119,6 +122,64 @@ function Challenge() {
             ctx.fillRect(0, 0, canvas.width, canvas.height);
         }
         });
+        
+        const undoStack = [canvas.toDataURL()];
+        const redoStack = [];
+        function getTopImage() {
+            return undoStack[undoStack.length - 1];
+        }
+
+        function handleMouseUp() {
+            clicked = false;
+            undoStack.push(source);
+            redoStack = [];
+        }
+
+        function undo() {
+            redoStack.push(undoStack.pop());
+            source = getTopImage();
+            img.src = source;
+            canvas.clearRect(0,0,canvas.width,canvas.height);
+        };
+        canvas.drawImage(img,0,0,canvas.width,canvas.height);
+        renderImage();
+
+        function redo() {
+            undoStack.push(redoStack.pop());
+            source = getTopImage();
+            img.src = source;
+            canvas.clearRect(
+               0,0,canvas.width,canvas.height
+            );
+            canvas.drawImage(
+               img,0,0,canvas.width,canvas.height
+            );
+            renderImage();
+        }
+
+        if (e.target.id === 'undo') {
+            if (undoStack.length > 1) {
+                undo();
+            }
+        }
+
+        if (e.target.id === 'redo') {
+            if (redoStack.length >=1) {
+                redo();
+            }
+        }
+
+        function handleUndo() {
+            if (undoStack.length>1) {
+                undoRedo(redoStack, undoStack);
+            }
+        }
+        function handleRedo() {
+            if (redoStack.length>=1) {
+                undoRedo(undoStack, redoStack);
+            }
+        }
+        
 
         // Change Colour
         toolbar.addEventListener('change', e => {
@@ -147,10 +208,6 @@ function Challenge() {
                   <div id='prompt' className='prompt'>{prompt}</div>
                   <button onClick={() => navigate('')} className='free-draw'>Free Draw</button>
                   <button onClick={() => navigate('')} className='challenge'>Challenge</button>
-                  <div className='timer-section'>
-                    <button className='timer-button'></button>
-                    <div className='timer'></div>
-                  </div>
                 </div>
                 <section className="drawing-section">
                   <div ref={toolbarRef} className='toolbar'>
@@ -179,6 +236,7 @@ function Challenge() {
                     <img src={Trash} id="clear" className='trash' />
                   </div>
                   <div className="drawing-board">
+                    <h1 className='challenge-mode'>Challenge Mode</h1>
                     <canvas ref={canvasRef} id="drawing-board"></canvas>
                   <div className='bottom-section'>
                     <input className='drawing-name' id='given-name' placeholder='Give it a name....'/>
@@ -188,6 +246,10 @@ function Challenge() {
                     <img src={Download} onClick={handleSave} className='download'/>
                     </div>
                   </div>
+                  </div>
+                  <div className='timer-section'>
+                    <button className='timer-button'></button>
+                    <div className='timer'></div>
                   </div>
                 </section>
             </div>
