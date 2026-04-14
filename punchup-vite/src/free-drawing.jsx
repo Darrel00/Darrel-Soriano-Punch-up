@@ -1,14 +1,9 @@
 import { Routes, Route, useNavigate } from "react-router-dom";
-import Toolbar from "./components/toolbar.jsx";
-import SaveButton from "./components/save-button.jsx";
-import Navbutton from "./components/nav-button.jsx"
 
-function Challenge() {
+function FreeDrawing() {
     const navigate = useNavigate();
 
     return (
-        <Routes>
-            <Route path='/' element ={
             <div className="background">
                 <section className="website-top">
                     <div>
@@ -19,17 +14,13 @@ function Challenge() {
                     </div>
                 </section>
                 <div className="header">
-                  <Navbutton />
+                  <button onClick={() => navigate('/')} className='homepage'>Home</button>
                 </div>
                 <section className="drawing-section">
-                  <Toolbar />
                 </section>
             </div>
-            } />
-            <Route path='/*' element={<ProjectList />} />
-        </Routes>
     )
 }
 
-export default Challenge;
+export default FreeDrawing;
 
