@@ -99,9 +99,11 @@ function Challenge() {
                     });
 
                     canvas.addEventListener('mouseup', () => {
+                        if (!isPaintingRef.current) return;
                         isPaintingRef.current = false;
                         ctx.stroke();
                         ctx.beginPath();
+                        saveState(); 
                     });
 
                     canvas.addEventListener('mousemove', draw);
@@ -121,68 +123,46 @@ function Challenge() {
         if (e.target.id === 'clear') {
             ctx.fillStyle = '#ffffff';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
+            saveState();
         }
         });
 
         // Undo and Redo Function //
-        /*
+
         const undoStack = [canvas.toDataURL()];
         const redoStack = [];
-        function getTopImage() {
-            return undoStack[undoStack.length - 1];
-        }
 
-        function handleMouseUp() {
-            clicked = false;
-            undoStack.push(source);
-            redoStack = [];
-        }
-
-        function undo() {
-            redoStack.push(undoStack.pop());
-            source = getTopImage();
-            img.src = source;
-            canvas.clearRect(0,0,canvas.width,canvas.height);
+        const saveState = () => {
+            undoStack.push(canvas.toDataURL());
+            redoStack.length = 0; 
         };
-        canvas.drawImage(img,0,0,canvas.width,canvas.height);
-        renderImage();
 
-        function redo() {
-            undoStack.push(redoStack.pop());
-            source = getTopImage();
-            img.src = source;
-            canvas.clearRect(
-               0,0,canvas.width,canvas.height
-            );
-            canvas.drawImage(
-               img,0,0,canvas.width,canvas.height
-            );
-            renderImage();
-        }
+        const restoreState = (dataURL) => {
+            const img = new Image();
+            img.src = dataURL;
+            img.onload = () => {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+            };
+        };
 
-        if (e.target.id === 'undo') {
+        const handleUndo = () => {
             if (undoStack.length > 1) {
-                undo();
+                redoStack.push(undoStack.pop()); 
+                restoreState(undoStack[undoStack.length - 1]); 
             }
-        }
+        };
 
-        if (e.target.id === 'redo') {
-            if (redoStack.length >=1) {
-                redo();
+        const handleRedo = () => {
+            if (redoStack.length > 0) {
+                const state = redoStack.pop();
+                undoStack.push(state);
+                restoreState(state);
             }
-        }
+        };
 
-        function handleUndo() {
-            if (undoStack.length>1) {
-                undoRedo(redoStack, undoStack);
-            }
-        }
-        function handleRedo() {
-            if (redoStack.length>=1) {
-                undoRedo(undoStack, redoStack);
-            }
-        }
-        */
+        document.getElementById('undo').addEventListener('click', handleUndo);
+        document.getElementById('redo').addEventListener('click', handleRedo);
 
         // Change Colour
         toolbar.addEventListener('change', e => {
@@ -209,8 +189,8 @@ function Challenge() {
                 <div className="header">
                   <button id='generate' className='generate-prompt' onClick={getPrompt}>Generate a Prompt</button>
                   <div id='prompt' className='prompt'>{prompt}</div>
-                  <button onClick={() => navigate('/free-drawing')} className='free-draw'>Free Draw</button>
-                  <button onClick={() => navigate('/')} className='homepage'>Home</button>
+                  <button onClick={() => navigate('/free-drawing')} className='route-button'>Free Draw</button>
+                  <button onClick={() => navigate('/')} className='route-button'>Home</button>
                 </div>
                 <section className="drawing-section">
                   <div ref={toolbarRef} className='toolbar'>
@@ -239,13 +219,13 @@ function Challenge() {
                     <img src={Trash} id="clear" className='trash' />
                   </div>
                   <div className="drawing-board">
-                    <h1 className='challenge-mode'>Challenge Mode</h1>
+                    <h1 className='mode-title'>Challenge Mode</h1>
                     <canvas ref={canvasRef} id="drawing-board"></canvas>
                   <div className='bottom-section'>
                     <input className='drawing-name' id='given-name' placeholder='Give it a name....'/>
                     <div className='bottom-section-buttons'>
-                    <img src={Undo} className='undo'/>
-                    <img src={Redo} className='redo'/>
+                    <img src={Undo} className='undo' id='undo'/>
+                    <img src={Redo} className='redo' id='redo'/>
                     <img src={Download} onClick={handleSave} className='download'/>
                     </div>
                   </div>
