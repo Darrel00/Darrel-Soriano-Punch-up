@@ -28,6 +28,11 @@
     font-style: normal;
     font-weight: 700;
     line-height: normal;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
 }
 
 .homepage-top {
@@ -107,11 +112,6 @@
     width: 500px;
     height: 550px;
     color: #FFFFFF;
-    text-align: center;
-    font-size: 32px;
-    font-family: Sansation;
-    font-weight: 700;
-    line-height: normal;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -122,10 +122,33 @@
     }
 }
 
+.homepage-button-text {
+    font-size: 32px;
+    font-family: Sansation;
+    font-weight: 700;
+    line-height: normal;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+}
+
+.homepage-button-description {
+    font-size: 25px;
+    font-family: Sansation;
+    font-weight: 400;
+    line-height: normal;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    max-width: 400px;
+    margin-top: 15px;
+}
+
 .homepage-button-image {
     width: 360px;
     height: 360px;
-    margin-top: 40px;
+    margin-bottom: 40px;
 }
 
 canvas {
@@ -142,7 +165,6 @@ canvas {
 
 .drawing-board {
     border-color: black;
-    margin-left: 70px;
 }
 
 .background {
@@ -204,6 +226,7 @@ canvas {
     display: flex;
     justify-content: center;
     padding: 130px;
+    gap: 40px;
 }
 
 .pencil, .eraser, .stroke-width, .stroke-color, .trash {
