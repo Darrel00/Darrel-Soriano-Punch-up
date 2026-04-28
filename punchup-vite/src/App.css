@@ -157,8 +157,7 @@ canvas {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 100px;
-
+    gap: 430px;
 }
 
 .punchup-pic {
@@ -200,8 +199,8 @@ website-top-text {
 }
 
 .free-drawing-header {
-    justify-content: right;
-    padding-right: 950px;
+    justify-content: center;
+    padding-left: 2100px;
 }
 
 .mode-title {
@@ -214,24 +213,46 @@ website-top-text {
     margin-bottom: 20px;
 }
 
-.generate-prompt {
+.text-button {
     border-radius: 30px;
-    background: #FFB548;
-    width: 356px;
-    height: 100px;
-    color: #fff;
+    border: none;
+    font-family: Sansation;
     font-size: 35px;
     font-weight: bold;
-    font-family: Sansation;
-    &:hover {
-        cursor: pointer;
-        background-color: #B07827;
-    }
-    &:active {
-        cursor: pointer;
-        transform: scale(1.1);
-        background-color: #B07827;
-    }
+}
+
+.text-button:hover {
+    cursor: pointer;
+}
+
+.text-button:active {
+    cursor: pointer;
+    transform: scale(1.1);
+}
+
+.text-button--light {
+    background: #FFF;
+    color: #001B71;
+}
+
+.text-button--light:hover,
+.text-button--light:active {
+    background-color: #98A2C2;
+}
+
+.text-button--accent {
+    background: #FFB548;
+    color: #fff;
+}
+
+.text-button--accent:hover,
+.text-button--accent:active {
+    background-color: #B07827;
+}
+
+.generate-prompt {
+    width: 356px;
+    height: 100px;
 }
 
 .prompt {
@@ -344,23 +365,8 @@ website-top-text {
 }
 
 .route-button {
-    border-radius: 30px;
-    background: #FFF;
     width: 300px;
     height: 100px;
-    color: #001B71;
-    font-size: 35px;
-    font-weight: bold;
-    font-family: Sansation;
-    &:hover {
-        cursor: pointer;
-        background-color: #98A2C2;
-    }
-    &:active {
-        cursor: pointer;
-        transform: scale(1.1);
-        background-color: #98A2C2;
-    }
 }
 
 .bottom-section {
@@ -395,22 +401,17 @@ website-top-text {
 
 .timer-section {
     display: flex;
-    flex-direction: row;
-    align-items: center;
+    flex-direction: column;
+    align-items: left;
+    margin-bottom: 1500px;
     justify-content: center;
-    gap: 10px;
+    gap: 40px;
 }
 
 .timer-button {
-    width: 250px;
+    width: 150px;
     height: 70px;
-    border-radius: 30px;
-    background-color: #69AAE4;
     border: none;
-    color: #fff;
-    font-size: 35px;
-    font-weight: bold;
-    font-family: Sansation;
     &:hover {
         cursor: pointer;
         transform: scale(1.1);
@@ -422,22 +423,59 @@ website-top-text {
 }
 
 .timer {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
+    color: #fff;
+    font-size: 100px;
+    font-family: Sansation;
+    font-weight: bold;
+    align-self: center;
 }
 
-@media (max-width: 412px) {
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding-top: 40px;
+    z-index: 1000;
+}
 
-    .homepage-background {
-        height: 100vh;
-        width: 100vw;
-        padding: 20px;
+.modal-button {
+    width: 100%;
+    background: #69AAE4;
+    margin-top: 20px;
+    border-radius: 30px;
+    padding: 10px 20px;
+    color: #fff;
+    max-width: 200px;
+    height: 100%;
+    max-height: 70px;
+    justify-self: center;
+    border: none;
+    &:hover {
+        cursor: pointer;
+        transform: scale(1.1);
     }
+    &:active {
+        cursor: pointer;
+        transform: scale(1.1);
+    }
+}
 
-
-
-
+.modal {
+    background: white;
+    color: #001B71;
+    font-size: 40px;
+    font-family: Sansation;
+    font-weight: bold;
+    width: 100%;
+    max-width: 600px;
+    height: 100%;
+    max-height: 300px;
+    padding: 60px 48px;
+    align-items: center;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
 }

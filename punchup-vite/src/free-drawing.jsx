@@ -78,14 +78,18 @@ function FreeDrawing() {
 
         // Draw Function
         const draw = (e) => {
-            if(!isPaintingRef.current || (!DrawModeRef.current && !EraseModeRef)) return;
+            if (!isPaintingRef.current || (!DrawModeRef.current && !EraseModeRef)) return;
             const rect = canvas.getBoundingClientRect();
             ctx.lineWidth = lineWidthRef.current;
             ctx.lineCap = 'round';
-            ctx.strokeStyle = DrawModeRef.current ? '#000000' : '#ffffff';
+            if (EraseModeRef.current) {
+                ctx.strokeStyle = '#ffffff';
+            }
             ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
             ctx.stroke();
         };
+
+        
 
         toolbar.addEventListener('click', e => {
             if (e.target.id === 'draw') {
@@ -100,9 +104,11 @@ function FreeDrawing() {
                     });
 
                     canvas.addEventListener('mouseup', () => {
+                        if (!isPaintingRef.current) return;
                         isPaintingRef.current = false;
                         ctx.stroke();
                         ctx.beginPath();
+                        saveState(); 
                     });
 
                     canvas.addEventListener('mousemove', draw);
@@ -122,68 +128,45 @@ function FreeDrawing() {
         if (e.target.id === 'clear') {
             ctx.fillStyle = '#ffffff';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
+            saveState();
         }
         });
 
-        // Undo and Redo Function //
-        /*
-        const undoStack = [canvas.toDataURL()];
-        const redoStack = [];
-        function getTopImage() {
-            return undoStack[undoStack.length - 1];
-        }
-
-        function handleMouseUp() {
-            clicked = false;
-            undoStack.push(source);
-            redoStack = [];
-        }
-
-        function undo() {
-            redoStack.push(undoStack.pop());
-            source = getTopImage();
-            img.src = source;
-            canvas.clearRect(0,0,canvas.width,canvas.height);
-        };
-        canvas.drawImage(img,0,0,canvas.width,canvas.height);
-        renderImage();
-
-        function redo() {
-            undoStack.push(redoStack.pop());
-            source = getTopImage();
-            img.src = source;
-            canvas.clearRect(
-               0,0,canvas.width,canvas.height
-            );
-            canvas.drawImage(
-               img,0,0,canvas.width,canvas.height
-            );
-            renderImage();
-        }
-
-        if (e.target.id === 'undo') {
-            if (undoStack.length > 1) {
-                undo();
-            }
-        }
-
-        if (e.target.id === 'redo') {
-            if (redoStack.length >=1) {
-                redo();
-            }
-        }
-
-        function handleUndo() {
-            if (undoStack.length>1) {
-                undoRedo(redoStack, undoStack);
-            }
-        }
-        function handleRedo() {
-            if (redoStack.length>=1) {
-                undoRedo(undoStack, redoStack);
-            }
-        }
-        */
+               // Undo and Redo Function //
+               const undoStack = [canvas.toDataURL()];
+               const redoStack = [];
+       
+               const saveState = () => {
+                   undoStack.push(canvas.toDataURL());
+                   redoStack.length = 0; 
+               };
+       
+               const restoreState = (dataURL) => {
+                   const img = new Image();
+                   img.src = dataURL;
+                   img.onload = () => {
+                       ctx.clearRect(0, 0, canvas.width, canvas.height);
+                       ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                   };
+               };
+       
+               const handleUndo = () => {
+                   if (undoStack.length > 1) {
+                       redoStack.push(undoStack.pop()); 
+                       restoreState(undoStack[undoStack.length - 1]); 
+                   }
+               };
+       
+               const handleRedo = () => {
+                   if (redoStack.length > 0) {
+                       const state = redoStack.pop();
+                       undoStack.push(state);
+                       restoreState(state);
+                   }
+               };
+       
+               document.getElementById('undo').addEventListener('click', handleUndo);
+               document.getElementById('redo').addEventListener('click', handleRedo);
 
         // Change Colour
         toolbar.addEventListener('change', e => {
@@ -202,16 +185,15 @@ function FreeDrawing() {
         <div className="background">
                 <section className="website-top">
                     <div className='website-top-text'>
-                        <h1 className='title'>Test your ideas with the Challenge Mode!</h1>
+                        <h1 className='title'>Relax and let your creativity flow!</h1>
                         <br />
-                        <h3 className='description'>See what it’s like to be a designer by putting your ideas into a drawing!
-                            Generate a prompt, and use the drawing tools to make a design before the time runs out. When you’re done, save your image on the bottom right.</h3>
+                        <h3 className='description'>Use the drawing tools to make a design. When you’re done, save your image on the bottom right.</h3>
                     </div>
                     <img src={PunchupPic} className='punchup-pic' />
                 </section>
         <div className="free-drawing-header">
-          <button onClick={() => navigate('/challenge-mode')} className='route-button'>Challenge</button>
-          <button onClick={() => navigate('/')} className='route-button'>Home</button>
+          <button onClick={() => navigate('/challenge-mode')} className='text-button text-button--light route-button'>Challenge</button>
+          <button onClick={() => navigate('/')} className='text-button text-button--light route-button'>Home</button>
         </div>
         <section className="drawing-section">
           <div ref={toolbarRef} className='toolbar'>

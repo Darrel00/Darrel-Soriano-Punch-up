@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from "react-router-dom";
-import { createPortal } from 'react-dom';
 import Download from "./assets/Download.svg";
 import Eraser from "./assets/Eraser.svg";
 import Pen from "./assets/Pen.svg";
@@ -9,6 +8,9 @@ import Undo from "./assets/Undo.svg";
 import Stroke from "./assets/Stroke.svg";
 import Trash from "./assets/Trash-Can.svg";
 import PunchupPic from "./assets/Punchup-Picture.svg";
+import Pause from "./assets/Pause.svg";
+import Reset from "./assets/Reset.svg";
+import Play from "./assets/Play.svg";
 import './App.css';
 
 function Challenge() {
@@ -23,6 +25,10 @@ function Challenge() {
     const [prompt, setPrompt] = useState('');
     const strokeBtnRef = useRef(null);
     const [menuPosition, setMenuPosition] = useState({ top: 0, left: 0 });
+    const [timeLeft, setTimeLeft] = useState(60);
+    const [isRunning, setIsRunning] = useState(false);
+    const [timesUp, setTimesUp] = useState(false);
+    const timerRef = useRef(null);
     const navigate = useNavigate();
 
 
@@ -74,16 +80,35 @@ function Challenge() {
             console.error("Failed to fetch prompt:", error);
     }
 
-    // Timer Function //
-    const timer = () => {
-        const timerValue = document.getElementById('timer');
-        const timerInterval = setInterval(() => {
-            timerValue.textContent = timerValue.textContent - 1;
-            if (timerValue.textContent === '0') {
-                clearInterval(timerInterval);
-            }
+    // Start Timer Function //
+    const startTimer = () => {
+        if (isRunning || timeLeft === 0) return;
+        setIsRunning(true);
+        setTimesUp(false);
+        timerRef.current = setInterval(() => {
+            setTimeLeft(prev => {
+                if (prev <= 1) {
+                    clearInterval(timerRef.current);
+                    setIsRunning(false);
+                    setTimesUp(true);
+                    return 0;
+                }
+                return prev - 1;
+            });
         }, 1000);
-    }  
+    };
+
+    const pauseTimer = () => {
+        clearInterval(timerRef.current);
+        setIsRunning(false);
+    };
+    
+    const resetTimer = () => {
+        clearInterval(timerRef.current);
+        setIsRunning(false);
+        setTimesUp(false);
+        setTimeLeft(60);
+    };
 
     useEffect(() => {
         const canvas = canvasRef.current;
@@ -99,11 +124,13 @@ function Challenge() {
 
         // Draw Function
         const draw = (e) => {
-            if(!isPaintingRef.current || (!DrawModeRef.current && !EraseModeRef)) return;
+            if (!isPaintingRef.current || (!DrawModeRef.current && !EraseModeRef)) return;
             const rect = canvas.getBoundingClientRect();
             ctx.lineWidth = lineWidthRef.current;
             ctx.lineCap = 'round';
-            ctx.strokeStyle = DrawModeRef.current ? '#000000' : '#ffffff';
+            if (EraseModeRef.current) {
+                ctx.strokeStyle = '#ffffff';
+            }
             ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
             ctx.stroke();
         };
@@ -210,51 +237,39 @@ function Challenge() {
                     <img src={PunchupPic} className='punchup-pic' />
                 </section>
                 <div className="header">
-                  <button id='generate' className='generate-prompt' onClick={getPrompt}>Generate a Prompt</button>
+                  <button id='generate' className='text-button text-button--accent generate-prompt' onClick={getPrompt}>Generate a Prompt</button>
                   <div id='prompt' className='prompt'>{prompt}</div>
-                  <button onClick={() => navigate('/free-drawing')} className='route-button'>Free Draw</button>
-                  <button onClick={() => navigate('/')} className='route-button'>Home</button>
+                  <button onClick={() => navigate('/free-drawing')} className='text-button text-button--light route-button'>Free Draw</button>
+                  <button onClick={() => navigate('/')} className='text-button text-button--light route-button'>Home</button>
                 </div>
                 <section className="drawing-section">
-                {showWidthMenu && createPortal(
-                <div
-                    className="menu"
-                    style={{
-                        position: 'fixed',
-                        top: menuPosition.top + 1500,
-                        left: menuPosition.left + 500,
-                        zIndex: 1000,
-                    }}
-                >
-                    {strokeWidths.map(({ label, value }) => (
-                        <div
-                            key={value}
-                            onClick={() => handleWidthSelect(value)}
-                            className="map"
-                        >
-                            <div className="stroke" />
-                            {label} ({value}px)
-                        </div>
-                    ))}
-                </div>,
-                document.body
-            )}
                   <div ref={toolbarRef} className='toolbar'>
                     <img src={Pen} id='draw' className='pencil'/>
                     <img src={Eraser} id='erase' className='eraser'/>
                     <input className='stroke-color' id="stroke" name="stroke" type="color"/>
                     <div className="stroke-width-section">
                         <img src={Stroke} id="lineWidth" name='lineWidth' className='stroke-width' onClick={handleStrokeClick} />
+                        {showWidthMenu && (
+                    <div className="menu">
+
+                    {strokeWidths.map(({ label, value }) => (
+                        <div
+                            key={value}
+                            onClick={() => handleWidthSelect(value)}
+                            className="map"
+                            >
+                        <div className="stroke"/>
+                        {label} ({value}px)
+                        </div>
+                    ))}
+                    </div>
+                )}
                     </div>
                     <img src={Trash} id="clear" className='trash' />
                   </div>
                   <div className="drawing-board">
                     <div className='drawing-section-top'>
                     <h1 className='mode-title'>Challenge Mode</h1>
-                    <div className='timer-section'>
-                    <button className='timer-button'>Start Timer</button>
-                    <div className='timer' id='timer'>60</div>
-                  </div>
                   </div>
                     <canvas ref={canvasRef} id="drawing-board"></canvas>
                   <div className='bottom-section'>
@@ -264,9 +279,25 @@ function Challenge() {
                     <img src={Redo} className='redo' id='redo'/>
                     <img src={Download} onClick={handleSave} className='download'/>
                     </div>
+                </div>
                   </div>
+                  <div className='timer-section'>
+                  <div className='timer' id='timer'>
+                        {timeLeft}
+                    </div>
+                    <img src={Play} className='timer-button' onClick={startTimer} disabled={isRunning || timeLeft === 0}/>
+                    <img src={Pause}  className='timer-button' onClick={pauseTimer} disabled={!isRunning}/>
+                    <img src={Reset} className='timer-button' onClick={resetTimer}/>
                   </div>
                 </section>
+                {timesUp && (
+                <div className="modal-overlay">
+                    <div className="modal">
+                        <h2>Time's up!</h2>
+                        <div onClick={() => setTimesUp(false)} className='modal-button'>Close</div>
+                    </div>
+                </div>
+            )}
             </div>
     )
 }
