@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from "react-router-dom";
+import { createPortal } from 'react-dom';
 import Download from "./assets/Download.svg";
 import Eraser from "./assets/Eraser.svg";
 import Pen from "./assets/Pen.svg";
@@ -7,6 +8,7 @@ import Redo from "./assets/Redo.svg";
 import Undo from "./assets/Undo.svg";
 import Stroke from "./assets/Stroke.svg";
 import Trash from "./assets/Trash-Can.svg";
+import PunchupPic from "./assets/Punchup-Picture.svg";
 import './App.css';
 
 function Challenge() {
@@ -19,6 +21,8 @@ function Challenge() {
     const [showWidthMenu, setShowWidthMenu] = useState(false);
     const [selectedWidth, setSelectedWidth] = useState(5);
     const [prompt, setPrompt] = useState('');
+    const strokeBtnRef = useRef(null);
+    const [menuPosition, setMenuPosition] = useState({ top: 0, left: 0 });
     const navigate = useNavigate();
 
 
@@ -29,6 +33,17 @@ function Challenge() {
         { label: 'Thick', value: 10 },
         { label: 'Extra Thick', value: 20 },
     ]
+
+    const handleStrokeClick = () => {
+        if (strokeBtnRef.current) {
+            const rect = strokeBtnRef.current.getBoundingClientRect();
+            setMenuPosition({
+                top: rect.top,
+                left: rect.right + 8,
+            });
+    }
+    setShowWidthMenu(prev => !prev);
+};
 
     const handleWidthSelect = (value) => {
         lineWidthRef.current = value;
@@ -59,9 +74,16 @@ function Challenge() {
             console.error("Failed to fetch prompt:", error);
     }
 
-    // const timer = () => {
-        
-    // }
+    // Timer Function //
+    const timer = () => {
+        const timerValue = document.getElementById('timer');
+        const timerInterval = setInterval(() => {
+            timerValue.textContent = timerValue.textContent - 1;
+            if (timerValue.textContent === '0') {
+                clearInterval(timerInterval);
+            }
+        }, 1000);
+    }  
 
     useEffect(() => {
         const canvas = canvasRef.current;
@@ -128,7 +150,6 @@ function Challenge() {
         });
 
         // Undo and Redo Function //
-
         const undoStack = [canvas.toDataURL()];
         const redoStack = [];
 
@@ -180,11 +201,13 @@ function Challenge() {
     return (
             <div className="background">
                 <section className="website-top">
-                    <div>
-                        <h1 className='title'>Experience being a Graphic Designer!</h1>
+                    <div className='website-top-text'>
+                        <h1 className='title'>Test your ideas with the Challenge Mode!</h1>
+                        <br />
                         <h3 className='description'>See what it’s like to be a designer by putting your ideas into a drawing!
                             Generate a prompt, and use the drawing tools to make a design before the time runs out. When you’re done, save your image on the bottom right.</h3>
                     </div>
+                    <img src={PunchupPic} className='punchup-pic' />
                 </section>
                 <div className="header">
                   <button id='generate' className='generate-prompt' onClick={getPrompt}>Generate a Prompt</button>
@@ -193,33 +216,46 @@ function Challenge() {
                   <button onClick={() => navigate('/')} className='route-button'>Home</button>
                 </div>
                 <section className="drawing-section">
+                {showWidthMenu && createPortal(
+                <div
+                    className="menu"
+                    style={{
+                        position: 'fixed',
+                        top: menuPosition.top + 1500,
+                        left: menuPosition.left + 500,
+                        zIndex: 1000,
+                    }}
+                >
+                    {strokeWidths.map(({ label, value }) => (
+                        <div
+                            key={value}
+                            onClick={() => handleWidthSelect(value)}
+                            className="map"
+                        >
+                            <div className="stroke" />
+                            {label} ({value}px)
+                        </div>
+                    ))}
+                </div>,
+                document.body
+            )}
                   <div ref={toolbarRef} className='toolbar'>
                     <img src={Pen} id='draw' className='pencil'/>
                     <img src={Eraser} id='erase' className='eraser'/>
                     <input className='stroke-color' id="stroke" name="stroke" type="color"/>
                     <div className="stroke-width-section">
-                        <img src={Stroke} id="lineWidth" name='lineWidth' className='stroke-width' onClick={() => setShowWidthMenu(prev => !prev)} />
-
-                        {showWidthMenu && (
-                            <div className="menu">
-
-                            {strokeWidths.map(({ label, value }) => (
-                                <div
-                                    key={value}
-                                    onClick={() => handleWidthSelect(value)}
-                                    className="map"
-                                    >
-                                <div className="stroke"/>
-                                {label} ({value}px)
-                                </div>
-                            ))}
-                            </div>
-                        )}
+                        <img src={Stroke} id="lineWidth" name='lineWidth' className='stroke-width' onClick={handleStrokeClick} />
                     </div>
                     <img src={Trash} id="clear" className='trash' />
                   </div>
                   <div className="drawing-board">
+                    <div className='drawing-section-top'>
                     <h1 className='mode-title'>Challenge Mode</h1>
+                    <div className='timer-section'>
+                    <button className='timer-button'>Start Timer</button>
+                    <div className='timer' id='timer'>60</div>
+                  </div>
+                  </div>
                     <canvas ref={canvasRef} id="drawing-board"></canvas>
                   <div className='bottom-section'>
                     <input className='drawing-name' id='given-name' placeholder='Give it a name....'/>
@@ -229,10 +265,6 @@ function Challenge() {
                     <img src={Download} onClick={handleSave} className='download'/>
                     </div>
                   </div>
-                  </div>
-                  <div className='timer-section'>
-                    <button className='timer-button'></button>
-                    <div className='timer'></div>
                   </div>
                 </section>
             </div>

@@ -23,6 +23,7 @@
     width: 1260px;
     height: 168px;
     color: #001B71;
+    gap: 30px;
     font-family: Sansation;
     font-size: 32px;
     font-style: normal;
@@ -44,10 +45,9 @@
 
 .title {
     width: 1260px;
-    height: 168px;
     color: #001B71;
     font-family: Sansation;
-    font-size: 32px;
+    font-size: 52px;
     font-style: normal;
     font-weight: 700;
     line-height: normal;
@@ -73,7 +73,6 @@
     text-align: center;
     width: 100%;
     max-width: 600px;
-    margin-top: 20px;
 }
 
 .description-white {
@@ -81,29 +80,25 @@
     font-family: Sansation;
     font-size: 30px;
     font-weight: 400;
-    line-height: normal;
     text-align: center;
     justify-content: center;
     align-items: center;
     width: 100%;
     max-width: 900px;
-    margin-top: 40px;
 }
 
 .description {
-    width: 884px;
+    width: 1084px;
     height: 164px;
     color: #001B71;
     font-family: Sansation;
-    font-size: 25px;
+    font-size: 40px;
     font-weight: 400;
-    line-height: normal;
 }
 
 .homepage-buttons {
     display: flex;
     gap: 100px;
-    margin-top: 100px;
 }
 
 .homepage-button {
@@ -159,8 +154,28 @@ canvas {
 }
 
 .website-top {
+    display: flex;
     align-items: center;
-    padding: 70px;
+    justify-content: center;
+    gap: 100px;
+
+}
+
+.punchup-pic {
+    width: 100%;
+    max-width: 1000px;
+    height: 100%;
+    max-height: 1000px;
+}
+
+website-top-text {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #001B71;
+    font-family: Sansation;
+    font-weight: 700;
 }
 
 .drawing-board {
@@ -171,13 +186,22 @@ canvas {
     background-color: white;
 }
 
-.header {
+.header, .free-drawing-header {
     height: 180px;
     gap: 20px;
     align-items: center;
     justify-content: center;
     background: black;
     display: flex;
+}
+
+.header {
+    justify-content: center;
+}
+
+.free-drawing-header {
+    justify-content: right;
+    padding-right: 950px;
 }
 
 .mode-title {
@@ -226,6 +250,7 @@ canvas {
     display: flex;
     justify-content: center;
     padding: 130px;
+    height: 2450px;
     gap: 40px;
 }
 
@@ -273,7 +298,7 @@ canvas {
     width: 100%;
     max-width: 170px;
     height: 100%;
-    max-height: 1084px;
+    max-height: 830px;
     border-radius: 100px;
     background: #69AAE4;
     display: flex;
@@ -284,12 +309,16 @@ canvas {
 }
 
 .menu {
-    position: 'absolute';
-    top: '100%';
-    left: 0;
-    font-size: 15px;
+    position: absolute;
+    font-size: 40px;
     background: white;
-    z-index: 10;
+    line-height: normal;
+    z-index: 100;
+    width: 100%;
+    max-width: 400px;
+    height: 100%;
+    max-height: 250px;
+    padding: 20px;
 }
 
 .map {
@@ -350,3 +379,65 @@ canvas {
     width: 100%;
     max-width: 450px;
 }   
+
+.drawing-section-top {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    justify-content: center;
+    gap: 300px;
+    width: 100%;
+    height: 100%;
+    max-height: 100px;
+    margin-bottom: 20px;
+}
+
+.timer-section {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.timer-button {
+    width: 250px;
+    height: 70px;
+    border-radius: 30px;
+    background-color: #69AAE4;
+    border: none;
+    color: #fff;
+    font-size: 35px;
+    font-weight: bold;
+    font-family: Sansation;
+    &:hover {
+        cursor: pointer;
+        transform: scale(1.1);
+    }
+    &:active {
+        cursor: pointer;
+        transform: scale(1.1);
+    }
+}
+
+.timer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+@media (max-width: 412px) {
+
+    .homepage-background {
+        height: 100vh;
+        width: 100vw;
+        padding: 20px;
+    }
+
+
+
+
+}

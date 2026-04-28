@@ -7,6 +7,7 @@ import Redo from "./assets/Redo.svg";
 import Undo from "./assets/Undo.svg";
 import Stroke from "./assets/Stroke.svg";
 import Trash from "./assets/Trash-Can.svg";
+import PunchupPic from "./assets/Punchup-Picture.svg";
 import './App.css';
 
 function FreeDrawing() {
@@ -198,58 +199,62 @@ function FreeDrawing() {
     }, []);
 
     return (
-            <div className="background">
+        <div className="background">
                 <section className="website-top">
-                    <div>
-                        <h1 className='title'>Experience being a Graphic Designer!</h1>
+                    <div className='website-top-text'>
+                        <h1 className='title'>Test your ideas with the Challenge Mode!</h1>
+                        <br />
                         <h3 className='description'>See what it’s like to be a designer by putting your ideas into a drawing!
                             Generate a prompt, and use the drawing tools to make a design before the time runs out. When you’re done, save your image on the bottom right.</h3>
                     </div>
+                    <img src={PunchupPic} className='punchup-pic' />
                 </section>
-                <div className="header">
-                  <button onClick={() => navigate('/challenge-mode')} className='free-draw-button'>Challenge</button>
-                  <button onClick={() => navigate('/')} className='home-button'>Home</button>
-                </div>
-                <section className="drawing-section">
-                  <div ref={toolbarRef} className='toolbar'>
-                    <img src={Pen} id='draw' className='pencil'/>
-                    <img src={Eraser} id='erase' className='eraser'/>
-                    <input className='stroke-color' id="stroke" name="stroke" type="color"/>
-                    <div className="stroke-width-section">
-                        <img src={Stroke} id="lineWidth" name='lineWidth' className='stroke-width' onClick={() => setShowWidthMenu(prev => !prev)} />
+        <div className="free-drawing-header">
+          <button onClick={() => navigate('/challenge-mode')} className='route-button'>Challenge</button>
+          <button onClick={() => navigate('/')} className='route-button'>Home</button>
+        </div>
+        <section className="drawing-section">
+          <div ref={toolbarRef} className='toolbar'>
+            <img src={Pen} id='draw' className='pencil'/>
+            <img src={Eraser} id='erase' className='eraser'/>
+            <input className='stroke-color' id="stroke" name="stroke" type="color"/>
+            <div className="stroke-width-section">
+                <img src={Stroke} id="lineWidth" name='lineWidth' className='stroke-width' onClick={() => setShowWidthMenu(prev => !prev)} />
 
-                        {showWidthMenu && (
-                            <div className="menu">
+                {showWidthMenu && (
+                    <div className="menu">
 
-                            {strokeWidths.map(({ label, value }) => (
-                                <div
-                                    key={value}
-                                    onClick={() => handleWidthSelect(value)}
-                                    className="map"
-                                    >
-                                <div className="stroke"/>
-                                {label} ({value}px)
-                                </div>
-                            ))}
-                            </div>
-                        )}
+                    {strokeWidths.map(({ label, value }) => (
+                        <div
+                            key={value}
+                            onClick={() => handleWidthSelect(value)}
+                            className="map"
+                            >
+                        <div className="stroke"/>
+                        {label} ({value}px)
+                        </div>
+                    ))}
                     </div>
-                    <img src={Trash} id="clear" className='trash' />
-                  </div>
-                  <div className="drawing-board">
-                    <h1 className='mode-title'>Free Draw Mode</h1>
-                    <canvas ref={canvasRef} id="drawing-board"></canvas>
-                  <div className='bottom-section'>
-                    <input className='drawing-name' id='given-name' placeholder='Give it a name....'/>
-                    <div className='bottom-section-buttons'>
-                    <img src={Undo} className='undo'/>
-                    <img src={Redo} className='redo'/>
-                    <img src={Download} onClick={handleSave} className='download'/>
-                    </div>
-                  </div>
-                  </div>
-                </section>
+                )}
             </div>
+            <img src={Trash} id="clear" className='trash' />
+          </div>
+          <div className="drawing-board">
+            <div className='drawing-section-top'>
+            <h1 className='mode-title'>Free Draw Mode</h1>
+          </div>
+            <canvas ref={canvasRef} id="drawing-board"></canvas>
+          <div className='bottom-section'>
+            <input className='drawing-name' id='given-name' placeholder='Give it a name....'/>
+            <div className='bottom-section-buttons'>
+            <img src={Undo} className='undo' id='undo'/>
+            <img src={Redo} className='redo' id='redo'/>
+            <img src={Download} onClick={handleSave} className='download'/>
+            </div>
+          </div>
+          </div>
+        </section>
+    </div>
     )
 }
 
